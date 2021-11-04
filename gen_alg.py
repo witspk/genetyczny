@@ -9,6 +9,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from populacja import Populacja
 
 
 class Ui_Dialog(object):
@@ -79,9 +80,21 @@ class Ui_Dialog(object):
         self.maximizationCheckBox.setObjectName("maximizationCheckBox")
 
         self.retranslateUi(Dialog)
-        self.buttonBox.accepted.connect(Dialog.accept) # type: ignore
+        self.buttonBox.accepted.connect(self.runGen) # type: ignore
         self.buttonBox.rejected.connect(Dialog.reject) # type: ignore
         QtCore.QMetaObject.connectSlotsByName(Dialog)
+
+    def runGen(self):
+        print("poczatek testu")
+        l = 40
+        epoki=[]
+        for x in range(l):
+            if(x==0):
+                epoki.append(Populacja(100))
+            else:
+                epoki.append(epoki[x-1].epoka())
+        epoki[0].print()
+        epoki[l-1].print()
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
@@ -106,6 +119,9 @@ class Ui_Dialog(object):
         self.numberOfBits.setPlaceholderText(_translate("Dialog", "Number of bits"))
         self.maximizationCheckBox.setText(_translate("Dialog", "Maximization"))
 
+        
+       
+
 
 if __name__ == "__main__":
     import sys
@@ -115,3 +131,5 @@ if __name__ == "__main__":
     ui.setupUi(Dialog)
     Dialog.show()
     sys.exit(app.exec_())
+
+
