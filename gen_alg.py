@@ -36,10 +36,11 @@ class Ui_Dialog(object):
         self.endRange.setObjectName("endRange")
         self.populationAmount = QtWidgets.QLineEdit(Dialog)
         self.populationAmount.setGeometry(QtCore.QRect(10, 70, 291, 22))
+        self.populationAmount.setText("100")
         self.populationAmount.setObjectName("populationAmount")
         self.numberOfEpoch = QtWidgets.QLineEdit(Dialog)
         self.numberOfEpoch.setGeometry(QtCore.QRect(10, 130, 291, 22))
-        self.numberOfEpoch.setText("")
+        self.numberOfEpoch.setText("40")
         self.numberOfEpoch.setObjectName("numberOfEpoch")
         self.bestAndTourmamentChromosomeAmount = QtWidgets.QLineEdit(Dialog)
         self.bestAndTourmamentChromosomeAmount.setGeometry(QtCore.QRect(10, 160, 291, 22))
@@ -80,21 +81,30 @@ class Ui_Dialog(object):
         self.maximizationCheckBox.setObjectName("maximizationCheckBox")
 
         self.retranslateUi(Dialog)
-        self.buttonBox.accepted.connect(self.runGen) # type: ignore
+        self.buttonBox.accepted.connect(lambda: self.runGen(int(self.numberOfEpoch.text()),int(self.populationAmount.text()))) # type: ignore
         self.buttonBox.rejected.connect(Dialog.reject) # type: ignore
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
-    def runGen(self):
+    def runGen(self, epNo, poNo):
         print("poczatek testu")
-        l = 40
+        # l = 40
         epoki=[]
-        for x in range(l):
+        for x in range(epNo):
             if(x==0):
-                epoki.append(Populacja(100))
+                epoki.append(Populacja(poNo))
             else:
                 epoki.append(epoki[x-1].epoka())
         epoki[0].print()
-        epoki[l-1].print()
+        epoki[epNo-1].print()
+        f = open("demofile2.txt", "w")
+        for el in epoki:
+            f.write(str(el.print()) + "\n")                   
+        f.close()
+
+        #open and read the file after the appending:
+        f = open("demofile2.txt", "r")
+        print(f.read())
+
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
