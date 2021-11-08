@@ -1,4 +1,5 @@
 import random
+from math import ceil, floor
 
 from osobnik import Osobnik
 from FitnessFunction import FitnessFunction
@@ -38,9 +39,9 @@ class Populacja:
             return self.selkcja_best()
 
         elif rodzaj_selekcji == "kolem":
-            return self.selkcja_kolem()
+            return self.selekcja_kolem()
         elif rodzaj_selekcji == "turniej":
-            return self.selekcja_turniejowa()
+            return self.selekcja_turniejowa(2)
         else:
             pass
 
@@ -171,14 +172,62 @@ class Populacja:
     def selkcja_best(self):
         return self.best(0.5)
 
-    def selkcja_kolem(self):
+    def selekcja_kolem(self):
         new_pop = Populacja()
-        # TBD
+        przeliczone = []
+        dystrybuantaSum = 0
+        dystrybuanta = []
+
+        # przelicznenie na decimal
+        for x in range(len(self.population)):
+            decoded = self.population[x].decode(self.f.a, self.f.b, self.f.a, self.f.b)
+            przeliczone.append(self.f.value(decoded[0], decoded[1]))
+        prawdopodobienstwo = []
+        sumaOdwrotnosci = 0
+        # Obliczamy sumę funkcji dopasowania wszystkich osobników
+        for var in przeliczone:
+            sumaOdwrotnosci = sumaOdwrotnosci + 1.00 / var
+        # Obliczamy prawdopodobieństwo wyboru poszczególnych osobników
+        prawdopodobienstwoSum = 0
+        for var in przeliczone:
+            prawdopodobienstwo.append((1 / var) / sumaOdwrotnosci)
+            prawdopodobienstwoSum = prawdopodobienstwoSum + (1 / var) / sumaOdwrotnosci
+        # Liczymy dystrubuante
+        for var in prawdopodobienstwo:
+            dystrybuanta.append(dystrybuantaSum + var)
+            dystrybuantaSum = dystrybuantaSum + var
+        # Teraz „kręcimy naszym kołem ruletki”. Losujemy liczby z zakresu [0,1].
+        for i in range(0, floor(len(przeliczone) / 2)):
+            wylosowana = random.random()
+            roznicaNajmniejsza = 1
+
+            for j in range(0, len(dystrybuanta) - 1):
+                roznica = abs(abs(dystrybuanta[j]) - wylosowana)
+                if (roznica < roznicaNajmniejsza):
+                    roznicaNajmniejsza = roznica
+                    dobranyOsobnik = j
+            new_pop.dodaj(self.population[dobranyOsobnik+1])
         return new_pop
 
-    def selekcja_turniejowa(self):
+    def selekcja_turniejowa(self, k):
         new_pop = Populacja()
-        # TBD
+        group = []
+        przeliczone = []
+        for x in range(len(self.population)):
+            decoded = self.population[x].decode(self.f.a, self.f.b, self.f.a, self.f.b)
+            przeliczone.append(self.f.value(decoded[0], decoded[1]))
+
+        indexList = list(range(len(self.population) - 1))
+        for i in range(0, floor(len(przeliczone) / k)):
+            if len(indexList) >= k:
+                indexGroup = random.sample(indexList, k=int(k))
+            else :
+                indexGroup = indexList
+            for var in indexGroup:
+                group.append([var, przeliczone[var]])
+                indexList.remove(var)
+            groupWinner = min(group, key=lambda x: x[1])
+            new_pop.dodaj(self.population[groupWinner[0]])
         return new_pop
 
     def krzyzowanie_two(self, p_krzyzowania, ilosc_elit):
