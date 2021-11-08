@@ -160,8 +160,8 @@ class Populacja:
         return new_pop
 
     def nowa_epoka(self, rodzaj_selekcji, rodzaj_krzyzowania, p_krzyzowania, rodzaj_mutacji, p_mutacji, p_inversji,
-                   procent_elitarnych):
-        best_pop = self.best(procent_elitarnych)
+                   liczba_elitarnych):
+        best_pop = self.best_number(liczba_elitarnych)
         ilosc_elit = len(best_pop.population)
         new_pop = self \
             .selekcja(rodzaj_selekcji) \
@@ -197,6 +197,17 @@ class Populacja:
     def __add__(self, other):
         new_pop = copy.deepcopy(self)
         new_pop.population.extend(other.population)
+        return new_pop
+
+    def best_number(self, param):
+        new_pop = Populacja()
+        ranking = []
+        for i in range(len(self.population)):
+            decoded = self.population[i].decode(self.f.a, self.f.b, self.f.a, self.f.b)
+            ranking.append((i, self.f.value(decoded[0], decoded[1])))
+        ranking.sort(key=lambda x: x[1])
+        for x in ranking[:int(param)]:
+            new_pop.dodaj(self.population[x[0]])
         return new_pop
 
     def selkcja_best(self):
