@@ -1,5 +1,6 @@
 
 # ostatnie zmiany
+8/11 - Benedykt - selekcja turniejowa i kołem ruletki
 
 7/11 - Witek - parametr strategii elitarnej int (zamiast %)
 
