@@ -1,13 +1,13 @@
-from populacja import Populacja
+from populacja import Populacja, ESelection, ECross, EMutation
 
 
 def runner(dlugosc_chromo=20,
            wielkosc_populacji=10,
            liczba_epok=1000,
-           rodzaj_selekcji="best",
-           rodzaj_krzyzowania="jedno",
+           rodzaj_selekcji=ESelection.BEST,
+           rodzaj_krzyzowania=ECross.ONEPOINT,
            p_krzyzowania=0.8,
-           rodzaj_mutacji="jedno",
+           rodzaj_mutacji=EMutation.ONEPOINT,
            p_mutacji=0.2,
            p_inversji=0.2,
            procent_elitarnych=0.1):
