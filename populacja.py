@@ -1,9 +1,29 @@
 import random
+from enum import Enum
 from math import ceil, floor
 
 from osobnik import Osobnik
 from FitnessFunction import FitnessFunction
 import copy
+
+
+class ESelection(Enum):
+    BEST = 1
+    ROULETTE = 2
+    TOURNAMENT = 3
+
+
+class ECross(Enum):
+    ONEPOINT = 1
+    TWOPOINT = 2
+    TREEPOINT = 3
+    HOMOGENOUS = 4
+
+
+class EMutation(Enum):
+    ONEPOINT = 1
+    TWOPOINT = 2
+    EDGE = 3
 
 
 class Populacja:
@@ -34,13 +54,13 @@ class Populacja:
             print(str(counter) + ":" + str(x.asString()) + ":" + str(d) + ":" + str(self.f.value(d[0], d[1])))
             counter = counter + 1
 
-    def selekcja(self, rodzaj_selekcji="best"):
-        if rodzaj_selekcji == "best":
+    def selekcja(self, rodzaj_selekcji=ESelection.BEST):
+        if rodzaj_selekcji == ESelection.BEST:
             return self.selkcja_best()
 
-        elif rodzaj_selekcji == "kolem":
+        elif rodzaj_selekcji == ESelection.ROULETTE:
             return self.selekcja_kolem()
-        elif rodzaj_selekcji == "turniej":
+        elif rodzaj_selekcji == ESelection.TOURNAMENT:
             return self.selekcja_turniejowa(2)
         else:
             pass
@@ -52,13 +72,13 @@ class Populacja:
 
     # krzyżuje osobniki aż powstanie cała populacja bez tych ze strateii elitarnej
     def krzyzowanie(self, rodzaj_krzyzowania, p_krzyzowania, ilosc_elit):
-        if rodzaj_krzyzowania == "jedno":
+        if rodzaj_krzyzowania == ECross.ONEPOINT:
             return self.krzyzowanie_one( p_krzyzowania, ilosc_elit)
-        elif rodzaj_krzyzowania == "dwu":
+        elif rodzaj_krzyzowania == ECross.TWOPOINT:
             return self.krzyzowanie_two( p_krzyzowania, ilosc_elit)
-        elif rodzaj_krzyzowania == "trzy":
+        elif rodzaj_krzyzowania == ECross.TREEPOINT:
             return self.krzyzowanie_three( p_krzyzowania, ilosc_elit)
-        elif rodzaj_krzyzowania == "jednorodne":
+        elif rodzaj_krzyzowania == ECross.HOMOGENOUS:
             return self.krzyzowanie_jednorodne (p_krzyzowania, ilosc_elit)
         else:
             pass
@@ -92,11 +112,11 @@ class Populacja:
         return new_pop
 
     def mutuj(self, rodzaj_mutacji, p_mutacji):
-        if rodzaj_mutacji == "jedno":
+        if rodzaj_mutacji == EMutation.ONEPOINT:
             return self.mutacja_one(p_mutacji)
-        elif rodzaj_mutacji == "dwu":
+        elif rodzaj_mutacji == EMutation.TWOPOINT:
             return self.mutacja_two(p_mutacji)
-        elif rodzaj_mutacji == "brzeg":
+        elif rodzaj_mutacji == EMutation.EDGE:
             return self.mutacja_brzeg(p_mutacji)
         else:
             pass
@@ -141,8 +161,8 @@ class Populacja:
         return new_pop
 
     def nowa_epoka(self, rodzaj_selekcji, rodzaj_krzyzowania, p_krzyzowania, rodzaj_mutacji, p_mutacji, p_inversji,
-                   procent_elitarnych):
-        best_pop = self.best(procent_elitarnych)
+                   liczba_elitarnych):
+        best_pop = self.best_number(liczba_elitarnych)
         ilosc_elit = len(best_pop.population)
         new_pop = self \
             .selekcja(rodzaj_selekcji) \
@@ -150,6 +170,17 @@ class Populacja:
             .mutuj(rodzaj_mutacji, p_mutacji) \
             .inversja(p_inversji)
         return new_pop + best_pop
+
+    def findBest(self):
+        r = 1000000
+        for x in self.population:
+            decoded = x.decode(self.f.a, self.f.b, self.f.a, self.f.b)
+            v = self.f.value(decoded[0], decoded[1])
+            if (v < r):
+                r = v
+            robj = x
+
+        return Osobnik(robj)
 
     # zakładam, że dla obydwu zmiennych przedział jest ten sam.
     def best(self, param):
@@ -167,6 +198,17 @@ class Populacja:
     def __add__(self, other):
         new_pop = copy.deepcopy(self)
         new_pop.population.extend(other.population)
+        return new_pop
+
+    def best_number(self, param):
+        new_pop = Populacja()
+        ranking = []
+        for i in range(len(self.population)):
+            decoded = self.population[i].decode(self.f.a, self.f.b, self.f.a, self.f.b)
+            ranking.append((i, self.f.value(decoded[0], decoded[1])))
+        ranking.sort(key=lambda x: x[1])
+        for x in ranking[:int(param)]:
+            new_pop.dodaj(self.population[x[0]])
         return new_pop
 
     def selkcja_best(self):

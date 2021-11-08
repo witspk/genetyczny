@@ -1,5 +1,11 @@
 
 # ostatnie zmiany
+8/11 - Benedykt - selekcja turniejowa i kołem ruletki
+
+7/11 - Witek - parametr strategii elitarnej int (zamiast %)
+
+7/11 - Benedykt - connected GUI to backend
+
 7/11 - Witek zmiany beckendzie: 
     - obsługa parametrów, wydzielenie brakujących mentod (znaczone #TDB)
     - wyłonienie % najlepszych osobników
