@@ -175,7 +175,7 @@ class Ui_Dialog(object):
                                          mutationMethod,
                                          float(self.mutationProbability.text()),
                                          float(self.inversionProbability.text()),
-                                         float(self.eliteStrategyAmount.text())))
+                                         int(self.eliteStrategyAmount.text())))
         endTime = time.time()
         epoki[0].print()
         epoki[epNo-1].print()
