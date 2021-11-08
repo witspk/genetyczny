@@ -6,7 +6,7 @@
     - plik runner.py - to jest wersja runnera, która trzeba by dodac do gui w miejsce obecnego, ale nie chce w tym grzebac. Obsuguje parametry, ma implementowane parametry domyślne, dzieki nim można testowac go bez parametrów.
     - main.py - testuje runnera tylko
 
-6/11 - Dawid dodał do GUI wykresy
+7/11 - Dawid dodał do GUI wykresy
 
 5/11 - Rafał dodał GUI - gen_alg.py
 
