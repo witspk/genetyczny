@@ -2,100 +2,83 @@ import random
 
 from osobnik import Osobnik
 from FitnessFunction import FitnessFunction
-from statistics import median
+import copy
 
 
 class Populacja:
     f = FitnessFunction()
 
     def __init__(self, *args):
-        if (len(args) > 0):
+        if len(args) > 0:
             n = args[0]
-            if (isinstance(n, int)):
+            if len(args) == 1:
+                m = 25
+            else:
+                m = args[1]
+
+            if isinstance(n, int) and isinstance(m, int):
                 self.population = []
                 for x in range(n):
-                    self.population.append(Osobnik(50))
+                    self.population.append(Osobnik(m))
         else:
             self.population = []
 
     # wypisuje po pulacje na konsle do testów
     def print(self):
         print("Lp:Binarnie:Przeliczenie:Fitness")
-        counter = 1;
+        counter = 1
 
         for x in self.population:
-            d = x.decode(-10, 10, -10, 10)
+            d = x.decode(self.f.a, self.f.b, self.f.a, self.f.b)
             print(str(counter) + ":" + str(x.asString()) + ":" + str(d) + ":" + str(self.f.value(d[0], d[1])))
             counter = counter + 1
 
-    # znajdownie najlepszego osobnika do stratgii elitarnej
-    def findBest(self):
-        r = 1000000
-        for x in self.population:
-            decoded = x.decode(-10, 10, -10, 10)
-            v = self.f.value(decoded[0], decoded[1])
-            if (v < r):
-                r = v
-                robj = x
-        return Osobnik(robj)
+    def selekcja(self, rodzaj_selekcji="best"):
+        if rodzaj_selekcji == "best":
+            return self.selkcja_best()
 
-    #znajdownie drugiego najlepszego osobnika do stratgii elitarnej
-    def find2ndBest(self, best):
-        if (isinstance(best, Osobnik)):
-            r = 1000;
-            for x in self.population:
-                decoded = x.decode(-10, 10, -10, 10)
-                v = self.f.value(decoded[0], decoded[1])
-                if (v < r and x != best):
-                    r = v
-                    rx = x
-            return rx
-    #selekcja zwraca 50% najlepszych osobnikow
-    def selekcja(self):
-        # print("selekcja" + str(len(self.population)))
-        przeliczone = []
-        for x in range(len(self.population)):
-            decoded = self.population[x].decode(-10, 10, -10, 10)
-            przeliczone.append(self.f.value(decoded[0], decoded[1]))
-        mediana = median(przeliczone)
-        # print(mediana)
-        new_pop = Populacja()
-        mediany = []
-        for x in range(len(self.population)):
-            if przeliczone[x] < mediana:
-                new_pop.dodaj(self.population[x])
-            if przeliczone[x] == mediana:
-                mediany.append(self.population[x])
-        y = 0
-        while (len(new_pop.population) < len(self.population) / 2):
-            new_pop.dodaj(mediany[y])
-            y = y + 1
-        # new_pop.print()
-        return new_pop
+        elif rodzaj_selekcji == "kolem":
+            return self.selkcja_kolem()
+        elif rodzaj_selekcji == "turniej":
+            return self.selekcja_turniejowa()
+        else:
+            pass
 
-    #helper dodaje  osobnika do populacji
+    # helper dodaje  osobnika do populacji
     def dodaj(self, n):
-        if (isinstance(n, Osobnik)):
+        if isinstance(n, Osobnik):
             self.population.append(n)
 
-    #krzyżuje osobniki aż powstanie cała populacja bez 2 ze strateii elitarnej
-    def krzyzowanie(self):
+    # krzyżuje osobniki aż powstanie cała populacja bez tych ze strateii elitarnej
+    def krzyzowanie(self, rodzaj_krzyzowania, p_krzyzowania, ilosc_elit):
+        if rodzaj_krzyzowania == "jedno":
+            return self.krzyzowanie_one( p_krzyzowania, ilosc_elit)
+        elif rodzaj_krzyzowania == "dwu":
+            return self.krzyzowanie_two( p_krzyzowania, ilosc_elit)
+        elif rodzaj_krzyzowania == "trzy":
+            return self.krzyzowanie_three( p_krzyzowania, ilosc_elit)
+        elif rodzaj_krzyzowania == "jednorodne":
+            return self.krzyzowanie_jednorodne (p_krzyzowania, ilosc_elit)
+        else:
+            pass
+
+    def krzyzowanie_one(self, p_krzyzowania, ilosc_elit):
         # print("krzyzowanie" + str(len(self.population)))
         new_pop = Populacja()
-        while (len(new_pop.population) < len(self.population) * 2 - 2 and len(self.population) != 0):
+        while len(new_pop.population) < len(self.population) * 2 - ilosc_elit and len(self.population) != 0:
             # losowanie pary
             a = 0
             b = 0
             l = len(self.population)
-            while (a == b and l != 0):
+            while a == b and l != 0:
                 a = random.randint(0, len(self.population) - 1)
                 b = random.randint(0, len(self.population) - 1)
             # losowanie prawdopodobienstwa krzyżowania
             p = random.random()
             # losowanie miejsca krzyżowania
-            m = random.randint(1, len(self.population[a].chromo) / 2 - 1)
+            m = random.randint(1, len(self.population[a].chromo) // 2 - 1)
             # krzyzowanie wylosowanych osobników
-            if (p < 0.8):
+            if (p < p_krzyzowania):
                 o1str = self.population[a].asString()
                 o2str = self.population[b].asString()
 
@@ -107,14 +90,24 @@ class Populacja:
                 new_pop.dodaj(new2)
         return new_pop
 
-#mutoawanie punktowe
-    def mutuj(self):
+    def mutuj(self, rodzaj_mutacji, p_mutacji):
+        if rodzaj_mutacji == "jedno":
+            return self.mutacja_one(p_mutacji)
+        elif rodzaj_mutacji == "dwu":
+            return self.mutacja_two(p_mutacji)
+        elif rodzaj_mutacji == "brzeg":
+            return self.mutacja_brzeg(p_mutacji)
+        else:
+            pass
+
+    # mutoawanie punktowe
+    def mutacja_one(self, p_mutacji):
         new_pop = Populacja()
         for x in self.population:
             # losowanie prawdopodobienstwa
             p = random.random()
             # mutowanie
-            if (p < 0.3):
+            if (p < p_mutacji):
                 # losowanie punktu mutowania
                 a = random.randint(0, len(x.chromo) - 1)
                 o = Osobnik(x)
@@ -126,20 +119,18 @@ class Populacja:
             else:
                 new_pop.dodaj(x)
         return new_pop
-#inversja
-    def inversja(self):
+
+    # inversja
+    def inversja(self, p_inversji):
         new_pop = Populacja()
         for x in self.population:
             # losowanie prawdopodobienstwa
             p = random.random()
             # inversja
-            if (p <= 0.3):
+            if (p <= p_inversji):
                 a = random.randint(0, len(x.chromo) - 3)
-                if a <= len(x.chromo) / 2 - 2:
-                    b = random.randint(a + 2, len(x.chromo) / 2)
-                else:
-                    b = random.randint(a + 2, len(x.chromo) - 1)  # TBD sprawdzic czy dobrze początek przedziału
-                ostr = x.asString();
+                b = random.randint(a + 2, len(x.chromo))
+                ostr = x.asString()
                 ostr_concat = ostr[0] + ostr[1]
                 reverse = ostr_concat[a:b]
                 reverse = reverse[::-1]
@@ -148,10 +139,72 @@ class Populacja:
                 new_pop.dodaj(x)
         return new_pop
 
-    def epoka(self):
-        best = self.findBest()
-        sec_best = self.find2ndBest(best)
-        new_pop = self.selekcja().krzyzowanie().mutuj().inversja()
-        new_pop.dodaj(best)
-        new_pop.dodaj(sec_best)
+    def nowa_epoka(self, rodzaj_selekcji, rodzaj_krzyzowania, p_krzyzowania, rodzaj_mutacji, p_mutacji, p_inversji,
+                   procent_elitarnych):
+        best_pop = self.best(procent_elitarnych)
+        ilosc_elit = len(best_pop.population)
+        new_pop = self \
+            .selekcja(rodzaj_selekcji) \
+            .krzyzowanie(rodzaj_krzyzowania, p_krzyzowania, ilosc_elit) \
+            .mutuj(rodzaj_mutacji, p_mutacji) \
+            .inversja(p_inversji)
+        return new_pop + best_pop
+
+    # zakładam, że dla obydwu zmiennych przedział jest ten sam.
+    def best(self, param):
+        new_pop = Populacja()
+        ranking = []
+        for i in range(len(self.population)):
+            decoded = self.population[i].decode(self.f.a, self.f.b, self.f.a, self.f.b)
+            ranking.append((i, self.f.value(decoded[0], decoded[1])))
+        ranking.sort(key=lambda x: x[1])
+        end = int(len(self.population) * param)
+        for x in ranking[:end]:
+            new_pop.dodaj(self.population[x[0]])
         return new_pop
+
+    def __add__(self, other):
+        new_pop = copy.deepcopy(self)
+        new_pop.population.extend(other.population)
+        return new_pop
+
+    def selkcja_best(self):
+        return self.best(0.5)
+
+    def selkcja_kolem(self):
+        new_pop = Populacja()
+        # TBD
+        return new_pop
+
+    def selekcja_turniejowa(self):
+        new_pop = Populacja()
+        # TBD
+        return new_pop
+
+    def krzyzowanie_two(self, p_krzyzowania, ilosc_elit):
+        new_pop = Populacja()
+        # TBD
+        return new_pop
+
+    def krzyzowanie_three(self, p_krzyzowania, ilosc_elit):
+        new_pop = Populacja()
+        # TBD
+        return new_pop
+
+    def krzyzowanie_jednorodne(self, p_krzyzowania, ilosc_elit):
+        new_pop = Populacja()
+        # TBD
+        return new_pop
+
+    def mutacja_two(self, p_mutacji):
+        new_pop = Populacja()
+        # TBD
+        return new_pop
+
+    def mutacja_brzeg(self, p_mutacji):
+        new_pop = Populacja()
+        # TBD
+        return new_pop
+
+
+
