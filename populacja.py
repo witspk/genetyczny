@@ -291,9 +291,9 @@ class Populacja:
             else:
                 new_pop.dodaj(Osobnik(self.population[i]))
                 new_pop.dodaj(Osobnik(self.population[i + 1]))
-        if len(self.population) % 2 != 0:
-            new_pop.dodaj(Osobnik(self.population[len(self.population) - 1]))
-            new_pop.dodaj(Osobnik(self.population[len(self.population) - 1]))
+
+        new_pop.dodaj(Osobnik(self.population[len(self.population) - 1]))
+        new_pop.dodaj(Osobnik(self.population[len(self.population) - 1]))
         return new_pop
 
     def krzyzowanie_three(self, p_krzyzowania, ilosc_elit):
@@ -320,9 +320,9 @@ class Populacja:
             else:
                 new_pop.dodaj(Osobnik(self.population[i]))
                 new_pop.dodaj(Osobnik(self.population[i + 1]))
-        if len(self.population) % 2 != 0:
-            new_pop.dodaj(Osobnik(self.population[len(self.population) - 1]))
-            new_pop.dodaj(Osobnik(self.population[len(self.population) - 1]))
+
+        new_pop.dodaj(Osobnik(self.population[len(self.population) - 1]))
+        new_pop.dodaj(Osobnik(self.population[len(self.population) - 1]))
         return new_pop
 
     def krzyzowanie_jednorodne(self, p_krzyzowania, ilosc_elit):
@@ -342,9 +342,9 @@ class Populacja:
             else:
                 new_pop.dodaj(Osobnik(self.population[i]))
                 new_pop.dodaj(Osobnik(self.population[i + 1]))
-        if len(self.population) % 2 != 0:
-            new_pop.dodaj(Osobnik(self.population[len(self.population) - 1]))
-            new_pop.dodaj(Osobnik(self.population[len(self.population) - 1]))
+
+        new_pop.dodaj(Osobnik(self.population[len(self.population) - 1]))
+        new_pop.dodaj(Osobnik(self.population[len(self.population) - 1]))
         return new_pop
 
     def mutacja_two(self, p_mutacji):
