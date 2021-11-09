@@ -274,27 +274,107 @@ class Populacja:
 
     def krzyzowanie_two(self, p_krzyzowania, ilosc_elit):
         new_pop = Populacja()
-        # TBD
+        for i in range(0, len(self.population) - 1, 2):
+            p = random.random()
+            if p < p_krzyzowania:
+                pointOfCut1 = random.randint(0, len(self.population[0].chromo) - 1);
+                pointOfCut2 = random.randint(pointOfCut1, len(self.population[0].chromo) - 1);
+                newOsobnik1 = Osobnik(self.population[i])
+                newOsobnik2 = Osobnik(self.population[i + 1])
+                osobnik1ValueHolder = Osobnik(self.population[i])
+
+                for j in range(pointOfCut1, pointOfCut2):
+                    newOsobnik1.chromo[j] = newOsobnik2.chromo[j]
+                    newOsobnik2.chromo[j] = osobnik1ValueHolder.chromo[j]
+                new_pop.dodaj(newOsobnik1)
+                new_pop.dodaj(newOsobnik2)
+            else:
+                new_pop.dodaj(Osobnik(self.population[i]))
+                new_pop.dodaj(Osobnik(self.population[i + 1]))
+
+        new_pop.dodaj(Osobnik(self.population[len(self.population) - 1]))
+        new_pop.dodaj(Osobnik(self.population[len(self.population) - 1]))
         return new_pop
 
     def krzyzowanie_three(self, p_krzyzowania, ilosc_elit):
         new_pop = Populacja()
-        # TBD
+        for i in range(0, len(self.population) - 1, 2):
+            p = random.random()
+            if p < p_krzyzowania:
+                pointOfCut1 = random.randint(0, len(self.population[0].chromo) - 1)
+                pointOfCut2 = random.randint(pointOfCut1, len(self.population[0].chromo) - 1)
+                pointOfCut3 = random.randint(pointOfCut2, len(self.population[0].chromo) - 1)
+                newOsobnik1 = Osobnik(self.population[i])
+                newOsobnik2 = Osobnik(self.population[i + 1])
+                osobnik1ValueHolder = Osobnik(self.population[i])
+
+                for j in range(pointOfCut1, pointOfCut2):
+                    newOsobnik1.chromo[j] = newOsobnik2.chromo[j]
+                    newOsobnik2.chromo[j] = osobnik1ValueHolder.chromo[j]
+                osobnik1ValueHolder = Osobnik(newOsobnik1)
+                for z in range(pointOfCut3, len(self.population[0].chromo)):
+                    newOsobnik1.chromo[z] = newOsobnik2.chromo[z]
+                    newOsobnik2.chromo[z] = osobnik1ValueHolder.chromo[z]
+                new_pop.dodaj(newOsobnik1)
+                new_pop.dodaj(newOsobnik2)
+            else:
+                new_pop.dodaj(Osobnik(self.population[i]))
+                new_pop.dodaj(Osobnik(self.population[i + 1]))
+
+        new_pop.dodaj(Osobnik(self.population[len(self.population) - 1]))
+        new_pop.dodaj(Osobnik(self.population[len(self.population) - 1]))
         return new_pop
 
     def krzyzowanie_jednorodne(self, p_krzyzowania, ilosc_elit):
         new_pop = Populacja()
-        # TBD
+        for i in range(0, len(self.population) - 1, 2):
+            p = random.random()
+            if p < p_krzyzowania:
+                newOsobnik1 = Osobnik(self.population[i])
+                newOsobnik2 = Osobnik(self.population[i + 1])
+                osobnik1ValueHolder = Osobnik(self.population[i])
+
+                for j in range(1, len(self.population[0].chromo)-1, 2):
+                    newOsobnik1.chromo[j] = newOsobnik2.chromo[j]
+                    newOsobnik2.chromo[j] = osobnik1ValueHolder.chromo[j]
+                new_pop.dodaj(newOsobnik1)
+                new_pop.dodaj(newOsobnik2)
+            else:
+                new_pop.dodaj(Osobnik(self.population[i]))
+                new_pop.dodaj(Osobnik(self.population[i + 1]))
+
+        new_pop.dodaj(Osobnik(self.population[len(self.population) - 1]))
+        new_pop.dodaj(Osobnik(self.population[len(self.population) - 1]))
         return new_pop
 
     def mutacja_two(self, p_mutacji):
         new_pop = Populacja()
-        # TBD
+        for i in range(0, len(self.population)):
+            p = random.random()
+            if p < p_mutacji:
+                pointOfMutation1 = random.randint(0, len(self.population[0].chromo)-2)
+                pointOfMutation2 = random.randint(0, len(self.population[0].chromo)-1)
+                while pointOfMutation2 == pointOfMutation1:
+                    pointOfMutation2 = random.randint(0, len(self.population[0].chromo)-1)
+                newOsobnik1 = Osobnik(self.population[i])
+
+                newOsobnik1.chromo[pointOfMutation1]=1 if newOsobnik1.chromo[pointOfMutation1]==0 else 1
+                newOsobnik1.chromo[pointOfMutation2]=1 if newOsobnik1.chromo[pointOfMutation2]==0 else 1
+                new_pop.dodaj(newOsobnik1)
+            else:
+                new_pop.dodaj(Osobnik(self.population[i]))
         return new_pop
 
     def mutacja_brzeg(self, p_mutacji):
         new_pop = Populacja()
-        # TBD
+        for i in range(0, len(self.population)):
+            p = random.random()
+            if p < p_mutacji:
+                newOsobnik1 = Osobnik(self.population[i])
+                newOsobnik1.chromo[len(self.population)-1] = 1 if newOsobnik1.chromo[len(self.population)-1] == 0 else 1
+                new_pop.dodaj(newOsobnik1)
+            else:
+                new_pop.dodaj(Osobnik(self.population[i]))
         return new_pop
 
 
