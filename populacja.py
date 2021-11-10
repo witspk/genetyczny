@@ -56,7 +56,7 @@ class Populacja:
 
     def selekcja(self, rodzaj_selekcji, parametr_selekcji):
         if rodzaj_selekcji == ESelection.BEST:
-            return self.selkcja_best()
+            return self.selkcja_best(parametr_selekcji)
 
         elif rodzaj_selekcji == ESelection.ROULETTE:
             return self.selekcja_kolem()
@@ -213,8 +213,8 @@ class Populacja:
             new_pop.dodaj(self.population[x[0]])
         return new_pop
 
-    def selkcja_best(self):
-        return self.best(0.5)
+    def selkcja_best(self, parametr_selekcji):
+        return self.best(parametr_selekcji)
 
     def selekcja_kolem(self):
         new_pop = Populacja()

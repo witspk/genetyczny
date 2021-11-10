@@ -1,17 +1,17 @@
 from populacja import Populacja, ESelection, ECross, EMutation
 
 
-def runner(dlugosc_chromo=20,
-           wielkosc_populacji=20,
-           liczba_epok=1000,
-           rodzaj_selekcji=ESelection.TOURNAMENT,
-           parametr_selekcji=5,
+def runner(dlugosc_chromo=100,
+           wielkosc_populacji=1000,
+           liczba_epok=100,
+           rodzaj_selekcji=ESelection.BEST,
+           parametr_selekcji=0.10,
            rodzaj_krzyzowania=ECross.ONEPOINT,
            p_krzyzowania=0.8,
            rodzaj_mutacji=EMutation.ONEPOINT,
-           p_mutacji=0.2,
-           p_inversji=0.2,
-           liczba_elitarnych=4):
+           p_mutacji=0.5,
+           p_inversji=0.5,
+           liczba_elitarnych=10):
     epoki = []
     for x in range(liczba_epok):
         if x == 0:
@@ -27,5 +27,5 @@ def runner(dlugosc_chromo=20,
                                      p_inversji,
                                      liczba_elitarnych))
 
-    epoki[0].print()
-    epoki[liczba_epok - 1].print()
+    epoki[0].best_number(1).print()
+    epoki[liczba_epok - 1].best_number(1).print()
