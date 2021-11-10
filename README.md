@@ -1,5 +1,11 @@
 
 # ostatnie zmiany
+10/11 :
+    - parametr selekcji, narazie używany tylko do turniejowej
+    - poprawienie krzyżowanie jednopunktowego 
+    - trzeba poprwaic jeszcze pozostałe krzyżowania
+
+
 8/11 - Benedykt - selekcja turniejowa i kołem ruletki
 
 8/11 - Witek - parametr strategii elitarnej int (zamiast %)

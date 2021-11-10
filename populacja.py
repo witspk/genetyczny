@@ -54,14 +54,14 @@ class Populacja:
             print(str(counter) + ":" + str(x.asString()) + ":" + str(d) + ":" + str(self.f.value(d[0], d[1])))
             counter = counter + 1
 
-    def selekcja(self, rodzaj_selekcji=ESelection.BEST):
+    def selekcja(self, rodzaj_selekcji, parametr_selekcji):
         if rodzaj_selekcji == ESelection.BEST:
             return self.selkcja_best()
 
         elif rodzaj_selekcji == ESelection.ROULETTE:
             return self.selekcja_kolem()
         elif rodzaj_selekcji == ESelection.TOURNAMENT:
-            return self.selekcja_turniejowa(2)
+            return self.selekcja_turniejowa(parametr_selekcji)
         else:
             pass
 
@@ -71,22 +71,22 @@ class Populacja:
             self.population.append(n)
 
     # krzyżuje osobniki aż powstanie cała populacja bez tych ze strateii elitarnej
-    def krzyzowanie(self, rodzaj_krzyzowania, p_krzyzowania, ilosc_elit):
+    def krzyzowanie(self, rodzaj_krzyzowania, p_krzyzowania, ilosc_po_krzyżowaniu):
         if rodzaj_krzyzowania == ECross.ONEPOINT:
-            return self.krzyzowanie_one( p_krzyzowania, ilosc_elit)
+            return self.krzyzowanie_one( p_krzyzowania, ilosc_po_krzyżowaniu)
         elif rodzaj_krzyzowania == ECross.TWOPOINT:
-            return self.krzyzowanie_two( p_krzyzowania, ilosc_elit)
+            return self.krzyzowanie_two( p_krzyzowania, ilosc_po_krzyżowaniu)
         elif rodzaj_krzyzowania == ECross.TREEPOINT:
-            return self.krzyzowanie_three( p_krzyzowania, ilosc_elit)
+            return self.krzyzowanie_three( p_krzyzowania, ilosc_po_krzyżowaniu)
         elif rodzaj_krzyzowania == ECross.HOMOGENOUS:
-            return self.krzyzowanie_jednorodne (p_krzyzowania, ilosc_elit)
+            return self.krzyzowanie_jednorodne (p_krzyzowania, ilosc_po_krzyżowaniu)
         else:
             pass
 
-    def krzyzowanie_one(self, p_krzyzowania, ilosc_elit):
+    def krzyzowanie_one(self, p_krzyzowania, ilosc_po_krzyżowaniu):
         # print("krzyzowanie" + str(len(self.population)))
         new_pop = Populacja()
-        while len(new_pop.population) < len(self.population) * 2 - ilosc_elit and len(self.population) != 0:
+        while len(new_pop.population) < ilosc_po_krzyżowaniu and len(self.population) != 0:
             # losowanie pary
             a = 0
             b = 0
@@ -160,13 +160,15 @@ class Populacja:
                 new_pop.dodaj(x)
         return new_pop
 
-    def nowa_epoka(self, rodzaj_selekcji, rodzaj_krzyzowania, p_krzyzowania, rodzaj_mutacji, p_mutacji, p_inversji,
+    def nowa_epoka(self, rodzaj_selekcji, parametr_selekcji, rodzaj_krzyzowania, p_krzyzowania, rodzaj_mutacji, p_mutacji, p_inversji,
                    liczba_elitarnych):
         best_pop = self.best_number(liczba_elitarnych)
         ilosc_elit = len(best_pop.population)
+        wielkosc_populacji = len(self.population)
+        ilosc_po_krzyżowaniu = wielkosc_populacji - ilosc_elit
         new_pop = self \
-            .selekcja(rodzaj_selekcji) \
-            .krzyzowanie(rodzaj_krzyzowania, p_krzyzowania, ilosc_elit) \
+            .selekcja(rodzaj_selekcji, parametr_selekcji) \
+            .krzyzowanie(rodzaj_krzyzowania, p_krzyzowania, ilosc_po_krzyżowaniu) \
             .mutuj(rodzaj_mutacji, p_mutacji) \
             .inversja(p_inversji)
         return new_pop + best_pop
@@ -272,7 +274,7 @@ class Populacja:
             new_pop.dodaj(self.population[groupWinner[0]])
         return new_pop
 
-    def krzyzowanie_two(self, p_krzyzowania, ilosc_elit):
+    def krzyzowanie_two(self, p_krzyzowania, ilosc_po_krzyżowaniu):
         new_pop = Populacja()
         for i in range(0, len(self.population) - 1, 2):
             p = random.random()
@@ -296,7 +298,7 @@ class Populacja:
         new_pop.dodaj(Osobnik(self.population[len(self.population) - 1]))
         return new_pop
 
-    def krzyzowanie_three(self, p_krzyzowania, ilosc_elit):
+    def krzyzowanie_three(self, p_krzyzowania, ilosc_po_krzyżowaniu):
         new_pop = Populacja()
         for i in range(0, len(self.population) - 1, 2):
             p = random.random()
@@ -325,7 +327,7 @@ class Populacja:
         new_pop.dodaj(Osobnik(self.population[len(self.population) - 1]))
         return new_pop
 
-    def krzyzowanie_jednorodne(self, p_krzyzowania, ilosc_elit):
+    def krzyzowanie_jednorodne(self, p_krzyzowania, ilosc_po_krzyżowaniu):
         new_pop = Populacja()
         for i in range(0, len(self.population) - 1, 2):
             p = random.random()

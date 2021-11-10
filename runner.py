@@ -2,9 +2,10 @@ from populacja import Populacja, ESelection, ECross, EMutation
 
 
 def runner(dlugosc_chromo=20,
-           wielkosc_populacji=10,
+           wielkosc_populacji=20,
            liczba_epok=1000,
-           rodzaj_selekcji=ESelection.BEST,
+           rodzaj_selekcji=ESelection.TOURNAMENT,
+           parametr_selekcji=5,
            rodzaj_krzyzowania=ECross.ONEPOINT,
            p_krzyzowania=0.8,
            rodzaj_mutacji=EMutation.ONEPOINT,
@@ -18,6 +19,7 @@ def runner(dlugosc_chromo=20,
         else:
             epoki.append(epoki[x - 1]
                          .nowa_epoka(rodzaj_selekcji,
+                                     parametr_selekcji,
                                      rodzaj_krzyzowania,
                                      p_krzyzowania,
                                      rodzaj_mutacji,
