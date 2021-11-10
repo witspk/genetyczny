@@ -177,12 +177,15 @@ class Ui_Dialog(object):
                                          float(self.inversionProbability.text()),
                                          int(self.eliteStrategyAmount.text())))
         endTime = time.time()
-        epoki[0].print()
-        epoki[epNo-1].print()
         self.generateFiles(epoki)
+        best = epoki[epNo-1].findBest()
+        f = FitnessFunction()
+        decoded = best.decode(f.a, f.b, f.a, f.b)
         messageBox = QMessageBox()
         messageBox.setWindowTitle("Message")
-        messageBox.setText("Execution time: " + str(endTime-startTime))
+        messageBox.setText("Solution: " + str(f.value(decoded[0], decoded[1])) + "\nFound at: x = ("
+                           + str(int(decoded[0])) + ", " + str(int(decoded[1])) +")\nReal values: " +
+                           str(decoded[0]) + ", " + str(decoded[1]) + "\nExecution time: " + str(endTime-startTime))
         messageBox.exec_()
 
 
