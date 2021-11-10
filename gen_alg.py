@@ -18,10 +18,10 @@ import time
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
-        Dialog.setObjectName("Genetic")
-        Dialog.resize(311, 466)
+        Dialog.setObjectName("Dialog")
+        Dialog.resize(311, 500)
         self.buttonBox = QtWidgets.QDialogButtonBox(Dialog)
-        self.buttonBox.setGeometry(QtCore.QRect(100, 430, 201, 32))
+        self.buttonBox.setGeometry(QtCore.QRect(100, 460, 201, 32))
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
         self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
         self.buttonBox.setCenterButtons(False)
@@ -29,6 +29,8 @@ class Ui_Dialog(object):
         self.selectionMethodCombo = QtWidgets.QComboBox(Dialog)
         self.selectionMethodCombo.setGeometry(QtCore.QRect(10, 270, 291, 22))
         self.selectionMethodCombo.setObjectName("selectionMethodCombo")
+        self.selectionMethodCombo.addItem("")
+        self.selectionMethodCombo.addItem("")
         self.selectionMethodCombo.addItem("")
         self.label = QtWidgets.QLabel(Dialog)
         self.label.setGeometry(QtCore.QRect(10, 250, 111, 16))
@@ -53,19 +55,22 @@ class Ui_Dialog(object):
         self.mutationProbability.setGeometry(QtCore.QRect(10, 190, 291, 22))
         self.mutationProbability.setObjectName("mutationProbability")
         self.label_2 = QtWidgets.QLabel(Dialog)
-        self.label_2.setGeometry(QtCore.QRect(10, 300, 101, 16))
+        self.label_2.setGeometry(QtCore.QRect(10, 330, 101, 16))
         self.label_2.setObjectName("label_2")
         self.crossMethodCombo = QtWidgets.QComboBox(Dialog)
-        self.crossMethodCombo.setGeometry(QtCore.QRect(10, 320, 291, 22))
+        self.crossMethodCombo.setGeometry(QtCore.QRect(10, 350, 291, 22))
         self.crossMethodCombo.setObjectName("crossMethodCombo")
         self.crossMethodCombo.addItem("")
         self.crossMethodCombo.addItem("")
+        self.crossMethodCombo.addItem("")
+        self.crossMethodCombo.addItem("")
         self.label_3 = QtWidgets.QLabel(Dialog)
-        self.label_3.setGeometry(QtCore.QRect(10, 350, 111, 16))
+        self.label_3.setGeometry(QtCore.QRect(10, 380, 111, 16))
         self.label_3.setObjectName("label_3")
         self.mutationMethodCombo = QtWidgets.QComboBox(Dialog)
-        self.mutationMethodCombo.setGeometry(QtCore.QRect(10, 370, 291, 22))
+        self.mutationMethodCombo.setGeometry(QtCore.QRect(10, 400, 291, 22))
         self.mutationMethodCombo.setObjectName("mutationMethodCombo")
+        self.mutationMethodCombo.addItem("")
         self.mutationMethodCombo.addItem("")
         self.mutationMethodCombo.addItem("")
         self.inversionProbability = QtWidgets.QLineEdit(Dialog)
@@ -75,11 +80,14 @@ class Ui_Dialog(object):
         self.numberOfBits.setGeometry(QtCore.QRect(10, 40, 291, 22))
         self.numberOfBits.setObjectName("numberOfBits")
         self.maximizationCheckBox = QtWidgets.QCheckBox(Dialog)
-        self.maximizationCheckBox.setGeometry(QtCore.QRect(10, 400, 111, 20))
+        self.maximizationCheckBox.setGeometry(QtCore.QRect(10, 430, 111, 20))
         self.maximizationCheckBox.setObjectName("maximizationCheckBox")
+        self.selectionParameter = QtWidgets.QLineEdit(Dialog)
+        self.selectionParameter.setGeometry(QtCore.QRect(10, 300, 291, 22))
+        self.selectionParameter.setObjectName("selectionParameter")
 
         self.retranslateUi(Dialog)
-        self.buttonBox.accepted.connect(lambda: self.runGen(int(self.numberOfEpoch.text()),int(self.populationAmount.text()))) # type: ignore
+        self.buttonBox.accepted.connect(lambda: self.runGen(int(self.numberOfEpoch.text()),int(self.populationAmount.text()), int(self.selectionParameter.text()))) # type: ignore
         self.buttonBox.rejected.connect(Dialog.reject) # type: ignore
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
@@ -144,7 +152,7 @@ class Ui_Dialog(object):
         plt.cla()
 
 
-    def runGen(self, epNo, poNo):
+    def runGen(self, epNo, poNo, selPar):
         print("poczatek testu")
         # l = 40
         epoki=[]
@@ -165,6 +173,7 @@ class Ui_Dialog(object):
             else:
                 epoki.append(epoki[x - 1]
                              .nowa_epoka(selectionMethod,
+                                         selPar,
                                          crossMethod,
                                          float(self.crossProbability.text()),
                                          mutationMethod,
@@ -206,6 +215,8 @@ class Ui_Dialog(object):
         self.inversionProbability.setPlaceholderText(_translate("Dialog", "Inversion probability"))
         self.numberOfBits.setPlaceholderText(_translate("Dialog", "Number of bits"))
         self.maximizationCheckBox.setText(_translate("Dialog", "Maximization"))
+        self.selectionParameter.setPlaceholderText(_translate("Dialog", "Selection parameter"))
+
 
 
 if __name__ == "__main__":
