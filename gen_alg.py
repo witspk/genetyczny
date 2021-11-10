@@ -204,7 +204,7 @@ class Ui_Dialog(object):
         self.label_2.setText(_translate("Dialog", "Cross method:"))
         self.crossMethodCombo.setItemText(0, _translate("Dialog", ECross.ONEPOINT.name))
         self.crossMethodCombo.setItemText(1, _translate("Dialog", ECross.TWOPOINT.name))
-        self.crossMethodCombo.setItemText(2, _translate("Dialog", ECross.TREEPOINT.name))
+        self.crossMethodCombo.setItemText(2, _translate("Dialog", ECross.THREEPOINT.name))
         self.crossMethodCombo.setItemText(3, _translate("Dialog", ECross.HOMOGENOUS.name))
         self.label_3.setText(_translate("Dialog", "Mutation method:"))
         self.mutationMethodCombo.setItemText(0, _translate("Dialog", EMutation.ONEPOINT.name))
