@@ -379,7 +379,7 @@ class Populacja:
             p = random.random()
             if p < p_mutacji:
                 newOsobnik1 = Osobnik(self.population[i])
-                newOsobnik1.chromo[len(self.population)-1] = 1 if newOsobnik1.chromo[len(self.population)-1] == 0 else 1
+                newOsobnik1.chromo[len(self.population[i].chromo)-1] = 1 if newOsobnik1.chromo[len(self.population[i].chromo)-1] == 0 else 1
                 new_pop.dodaj(newOsobnik1)
             else:
                 new_pop.dodaj(Osobnik(self.population[i]))

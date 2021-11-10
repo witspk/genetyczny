@@ -1,5 +1,7 @@
 
 # ostatnie zmiany
+10/11 Witek: poprawiona mutacja brzegowa
+
 10/11 Witek: poprawione krzyżowania 
 
 10/11: Daniel : wrzucam commita z drukowaniem wyników na front jak coś
