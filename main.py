@@ -9,7 +9,7 @@ start = time.time()
 print("poczatek testu")
 runner()
 end = time.time()
-print(end-start)
+print("Czas egzekucji algorytmu: "+ str(end-start))
 
 
 

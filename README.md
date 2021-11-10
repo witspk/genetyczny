@@ -1,6 +1,10 @@
 
 # ostatnie zmiany
-10/11 :
+10/11 Witek: poprawione krzyżowania 
+
+10/11: Daniel : wrzucam commita z drukowaniem wyników na front jak coś
+
+10/11 : Witek
     - parametr selekcji, narazie używany tylko do turniejowej
     - poprawienie krzyżowanie jednopunktowego 
     - trzeba poprwaic jeszcze pozostałe krzyżowania

@@ -16,7 +16,7 @@ class ESelection(Enum):
 class ECross(Enum):
     ONEPOINT = 1
     TWOPOINT = 2
-    TREEPOINT = 3
+    THREEPOINT = 3
     HOMOGENOUS = 4
 
 
@@ -76,7 +76,7 @@ class Populacja:
             return self.krzyzowanie_one( p_krzyzowania, ilosc_po_krzyżowaniu)
         elif rodzaj_krzyzowania == ECross.TWOPOINT:
             return self.krzyzowanie_two( p_krzyzowania, ilosc_po_krzyżowaniu)
-        elif rodzaj_krzyzowania == ECross.TREEPOINT:
+        elif rodzaj_krzyzowania == ECross.THREEPOINT:
             return self.krzyzowanie_three( p_krzyzowania, ilosc_po_krzyżowaniu)
         elif rodzaj_krzyzowania == ECross.HOMOGENOUS:
             return self.krzyzowanie_jednorodne (p_krzyzowania, ilosc_po_krzyżowaniu)
@@ -276,39 +276,49 @@ class Populacja:
 
     def krzyzowanie_two(self, p_krzyzowania, ilosc_po_krzyżowaniu):
         new_pop = Populacja()
-        for i in range(0, len(self.population) - 1, 2):
+        while len(new_pop.population) < ilosc_po_krzyżowaniu and len(self.population) != 0:
+            # losowanie pary
+            a = 0
+            b = 0
+            l = len(self.population)
+            while a == b and l != 0:
+                a = random.randint(0, len(self.population) - 1)
+                b = random.randint(0, len(self.population) - 1)
+            # losowanie prawdopodobienstwa krzyżowania
             p = random.random()
             if p < p_krzyzowania:
-                pointOfCut1 = random.randint(0, len(self.population[0].chromo) - 1);
-                pointOfCut2 = random.randint(pointOfCut1, len(self.population[0].chromo) - 1);
-                newOsobnik1 = Osobnik(self.population[i])
-                newOsobnik2 = Osobnik(self.population[i + 1])
-                osobnik1ValueHolder = Osobnik(self.population[i])
+                pointOfCut1 = random.randint(0, len(self.population[0].chromo) - 1)
+                pointOfCut2 = random.randint(pointOfCut1, len(self.population[0].chromo) - 1)
+                newOsobnik1 = Osobnik(self.population[a])
+                newOsobnik2 = Osobnik(self.population[b])
+                osobnik1ValueHolder = Osobnik(self.population[a])
 
                 for j in range(pointOfCut1, pointOfCut2):
                     newOsobnik1.chromo[j] = newOsobnik2.chromo[j]
                     newOsobnik2.chromo[j] = osobnik1ValueHolder.chromo[j]
                 new_pop.dodaj(newOsobnik1)
                 new_pop.dodaj(newOsobnik2)
-            else:
-                new_pop.dodaj(Osobnik(self.population[i]))
-                new_pop.dodaj(Osobnik(self.population[i + 1]))
-
-        new_pop.dodaj(Osobnik(self.population[len(self.population) - 1]))
-        new_pop.dodaj(Osobnik(self.population[len(self.population) - 1]))
         return new_pop
 
     def krzyzowanie_three(self, p_krzyzowania, ilosc_po_krzyżowaniu):
         new_pop = Populacja()
-        for i in range(0, len(self.population) - 1, 2):
+        while len(new_pop.population) < ilosc_po_krzyżowaniu and len(self.population) != 0:
+            # losowanie pary
+            a = 0
+            b = 0
+            l = len(self.population)
+            while a == b and l != 0:
+                a = random.randint(0, len(self.population) - 1)
+                b = random.randint(0, len(self.population) - 1)
+            # losowanie prawdopodobienstwa krzyżowania
             p = random.random()
             if p < p_krzyzowania:
                 pointOfCut1 = random.randint(0, len(self.population[0].chromo) - 1)
                 pointOfCut2 = random.randint(pointOfCut1, len(self.population[0].chromo) - 1)
                 pointOfCut3 = random.randint(pointOfCut2, len(self.population[0].chromo) - 1)
-                newOsobnik1 = Osobnik(self.population[i])
-                newOsobnik2 = Osobnik(self.population[i + 1])
-                osobnik1ValueHolder = Osobnik(self.population[i])
+                newOsobnik1 = Osobnik(self.population[a])
+                newOsobnik2 = Osobnik(self.population[b])
+                osobnik1ValueHolder = Osobnik(self.population[a])
 
                 for j in range(pointOfCut1, pointOfCut2):
                     newOsobnik1.chromo[j] = newOsobnik2.chromo[j]
@@ -319,34 +329,30 @@ class Populacja:
                     newOsobnik2.chromo[z] = osobnik1ValueHolder.chromo[z]
                 new_pop.dodaj(newOsobnik1)
                 new_pop.dodaj(newOsobnik2)
-            else:
-                new_pop.dodaj(Osobnik(self.population[i]))
-                new_pop.dodaj(Osobnik(self.population[i + 1]))
-
-        new_pop.dodaj(Osobnik(self.population[len(self.population) - 1]))
-        new_pop.dodaj(Osobnik(self.population[len(self.population) - 1]))
         return new_pop
 
     def krzyzowanie_jednorodne(self, p_krzyzowania, ilosc_po_krzyżowaniu):
         new_pop = Populacja()
-        for i in range(0, len(self.population) - 1, 2):
+        while len(new_pop.population) < ilosc_po_krzyżowaniu and len(self.population) != 0:
+            # losowanie pary
+            a = 0
+            b = 0
+            l = len(self.population)
+            while a == b and l != 0:
+                a = random.randint(0, len(self.population) - 1)
+                b = random.randint(0, len(self.population) - 1)
+            # losowanie prawdopodobienstwa krzyżowania
             p = random.random()
             if p < p_krzyzowania:
-                newOsobnik1 = Osobnik(self.population[i])
-                newOsobnik2 = Osobnik(self.population[i + 1])
-                osobnik1ValueHolder = Osobnik(self.population[i])
+                newOsobnik1 = Osobnik(self.population[a])
+                newOsobnik2 = Osobnik(self.population[b])
+                osobnik1ValueHolder = Osobnik(self.population[a])
 
                 for j in range(1, len(self.population[0].chromo)-1, 2):
                     newOsobnik1.chromo[j] = newOsobnik2.chromo[j]
                     newOsobnik2.chromo[j] = osobnik1ValueHolder.chromo[j]
                 new_pop.dodaj(newOsobnik1)
                 new_pop.dodaj(newOsobnik2)
-            else:
-                new_pop.dodaj(Osobnik(self.population[i]))
-                new_pop.dodaj(Osobnik(self.population[i + 1]))
-
-        new_pop.dodaj(Osobnik(self.population[len(self.population) - 1]))
-        new_pop.dodaj(Osobnik(self.population[len(self.population) - 1]))
         return new_pop
 
     def mutacja_two(self, p_mutacji):

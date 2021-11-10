@@ -6,7 +6,7 @@ def runner(dlugosc_chromo=100,
            liczba_epok=100,
            rodzaj_selekcji=ESelection.BEST,
            parametr_selekcji=0.10,
-           rodzaj_krzyzowania=ECross.ONEPOINT,
+           rodzaj_krzyzowania=ECross.HOMOGENOUS,
            p_krzyzowania=0.8,
            rodzaj_mutacji=EMutation.ONEPOINT,
            p_mutacji=0.5,
@@ -26,6 +26,8 @@ def runner(dlugosc_chromo=100,
                                      p_mutacji,
                                      p_inversji,
                                      liczba_elitarnych))
-
-    epoki[0].best_number(1).print()
+    print("Wiekość populacji pierwszej epoki:"+str(len(epoki[0].population)))
+    # epoki[0].print()
+    print("Wiekość populacji ostatniej epoki:"+str(len(epoki[liczba_epok - 1].population)))
+    # epoki[liczba_epok - 1].print()
     epoki[liczba_epok - 1].best_number(1).print()
